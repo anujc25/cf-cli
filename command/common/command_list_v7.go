@@ -7,10 +7,10 @@ import (
 	v7 "code.cloudfoundry.org/cli/command/v7"
 )
 
-var Commands commandList
+var Commands CommandList
 var ShouldFallbackToLegacy = false
 
-type commandList struct {
+type CommandList struct {
 	VerboseOrVersion bool `short:"v" long:"version" description:"verbose and version flag"`
 
 	V3Push v7.PushCommand `command:"v3-push" description:"Push a new app or sync changes to an existing app" hidden:"true"`
@@ -206,7 +206,7 @@ type commandList struct {
 }
 
 // HasCommand returns true if the command name is in the command list.
-func (c commandList) HasCommand(name string) bool {
+func (c CommandList) HasCommand(name string) bool {
 	if name == "" {
 		return false
 	}
@@ -223,7 +223,7 @@ func (c commandList) HasCommand(name string) bool {
 }
 
 // HasAlias returns true if the command alias is in the command list.
-func (c commandList) HasAlias(alias string) bool {
+func (c CommandList) HasAlias(alias string) bool {
 	if alias == "" {
 		return false
 	}
