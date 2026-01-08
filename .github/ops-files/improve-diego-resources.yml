@@ -1,0 +1,49 @@
+---
+# Ops file to improve Diego cell resources for better staging performance
+# This addresses staging failures due to insufficient resources
+
+# Increase Diego cell memory
+- type: replace
+  path: /instance_groups/name=diego-cell/vm_resources/ram
+  value: 16384  # 16GB instead of default 8GB
+
+# Increase Diego cell disk
+- type: replace
+  path: /instance_groups/name=diego-cell/vm_resources/ephemeral_disk_size
+  value: 102400  # 100GB instead of default
+
+# Increase Diego cell CPU
+- type: replace
+  path: /instance_groups/name=diego-cell/vm_resources/cpu
+  value: 4  # 4 CPUs instead of default 2
+
+# Increase executor memory capacity for staging
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/memory_capacity_mb?
+  value: 12288  # 12GB available for containers
+
+# Increase executor disk capacity for staging
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/disk_capacity_mb?
+  value: 81920  # 80GB available for containers
+
+# Increase staging timeout to handle slow buildpack operations
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/max_concurrent_downloads?
+  value: 10  # Allow more concurrent downloads during staging
+
+# Increase garden's default grace time for container shutdown
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden/destroy_containers_on_start?
+  value: false  # Don't destroy containers on restart for debugging
+
+# Increase grootfs reserved space to prevent disk pressure
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden/graph_cleanup_threshold_in_mb?
+  value: 5120  # 5GB threshold before cleanup
+
+# Increase concurrent operations on Diego cell
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/max_cache_size_in_bytes?
+  value: 10737418240  # 10GB cache for buildpack artifacts
+

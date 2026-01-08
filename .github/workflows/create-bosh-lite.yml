@@ -149,6 +149,7 @@ jobs:
           -o ${GITHUB_WORKSPACE}/cf-deployment/operations/enable-v2-api.yml \
           -o ${GITHUB_WORKSPACE}/cf-deployment/operations/use-internal-lookup-for-route-services.yml \
           -o ${GITHUB_WORKSPACE}/cli/.github/ops-files/diego-cell-instances.yml \
+          -o ${GITHUB_WORKSPACE}/cli/.github/ops-files/improve-diego-resources.yml \
           -o ${GITHUB_WORKSPACE}/cli/.github/ops-files/add-uaa-client-credentials.yml \
           -o ${GITHUB_WORKSPACE}/cli/.github/ops-files/increase-route-registration-interval.yml \
           -o ${GITHUB_WORKSPACE}/cli/.github/ops-files/add-oidc-provider.yml ${additional_args} \
