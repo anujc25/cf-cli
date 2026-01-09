@@ -30,6 +30,11 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
+          
+      - name: debug
+        if: always()
+        uses: mxschmitt/action-tmate@v3
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
