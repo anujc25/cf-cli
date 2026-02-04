@@ -122,7 +122,21 @@ jobs:
           
           env_name="${{ steps.setup-bbl-env.outputs.envName }}"
           cd $env_name/bbl-state
-          eval "$(bbl print-env)"
+          
+          # Capture bbl print-env output and validate it
+          bbl_env_output=$(bbl print-env)
+          echo "=== BBL print-env output ==="
+          echo "$bbl_env_output"
+          echo "==========================="
+          
+          # Check for malformed output (lines starting with colon)
+          if echo "$bbl_env_output" | grep -q "^:"; then
+            echo "ERROR: bbl print-env returned malformed output with lines starting with ':'"
+            echo "Attempting to fix by removing leading colons..."
+            bbl_env_output=$(echo "$bbl_env_output" | sed 's/^://')
+          fi
+          
+          eval "$bbl_env_output"
           
           jq -r .bosh.jumpbox_private_key metadata.json > /tmp/${env_name}.priv
 
@@ -131,7 +145,22 @@ jobs:
         run: |
           env_name="${{ steps.setup-bbl-env.outputs.envName }}"
           cd $env_name/bbl-state
-          eval "$(bbl print-env)"
+          
+          # Capture bbl print-env output and validate it
+          bbl_env_output=$(bbl print-env)
+          echo "=== BBL print-env output ==="
+          echo "$bbl_env_output"
+          echo "==========================="
+          
+          # Check for malformed output (lines starting with colon)
+          if echo "$bbl_env_output" | grep -q "^:"; then
+            echo "ERROR: bbl print-env returned malformed output with lines starting with ':'"
+            echo "Attempting to fix by removing leading colons..."
+            bbl_env_output=$(echo "$bbl_env_output" | sed 's/^://')
+          fi
+          
+          eval "$bbl_env_output"
+          
           bosh update-runtime-config ${GITHUB_WORKSPACE}/bosh-deployment/runtime-configs/dns.yml --name dns
           STEMCELL_VERSION=$(bosh interpolate ${GITHUB_WORKSPACE}/cf-deployment/cf-deployment.yml --path /stemcells/alias=default/version)
           bosh upload-stemcell "https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-jammy-go_agent?v=${STEMCELL_VERSION}"
@@ -162,9 +191,19 @@ jobs:
         if: failure()
         run: |
           env_name="${{ steps.setup-bbl-env.outputs.envName }}"
-          if [ -d ${env_name}/bbl_state ]; then
+          if [ -d ${env_name}/bbl-state ]; then
             cd ${env_name}/bbl-state
-            eval "$(bbl print-env)"
+            
+            # Capture bbl print-env output and validate it
+            bbl_env_output=$(bbl print-env)
+            
+            # Check for malformed output (lines starting with colon)
+            if echo "$bbl_env_output" | grep -q "^:"; then
+              echo "WARNING: bbl print-env returned malformed output, attempting to fix..."
+              bbl_env_output=$(echo "$bbl_env_output" | sed 's/^://')
+            fi
+            
+            eval "$bbl_env_output"
             
             echo "Deleting env ${env_name}"
             bbl down --no-confirm --gcp-service-account-key=key.json
