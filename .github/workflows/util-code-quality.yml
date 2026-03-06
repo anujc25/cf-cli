@@ -6,8 +6,8 @@ on:
     branches:
       - main
       - v8
-  schedule:
-    - cron: '45 5 * * *'
+  # schedule:
+  #   - cron: '45 5 * * *'
 
 jobs:
   analyze:

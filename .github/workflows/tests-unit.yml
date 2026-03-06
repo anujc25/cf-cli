@@ -15,9 +15,8 @@ on:
       - "v8.*"
   pull_request:
     branches:
-      - main
-      - v9
-      - v8
+      - tnz-main
+      - tnz-v8
     paths-ignore:
       - "doc/**"
       - ".gitpod.yml"
@@ -26,37 +25,33 @@ on:
 permissions:
   contents: read
 
+env:
+  GITHUB_USER: ${{ secrets.SVC_GITHUB_USER }}
+  GITHUB_TOKEN: ${{ secrets.SVC_GITHUB_TOKEN }}
+  GOPRIVATE: github.gwd.broadcom.net
+
 jobs:
   unit-tests:
-    name: Unit Tests (${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - ubuntu-22.04
-          - macos-latest
-          - macos-14
-          - windows-latest
-    runs-on: ${{ matrix.os }}
+    name: Unit Tests
+    runs-on: tpe-medium
     defaults:
       run:
-        shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+        shell: bash
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v6
+      uses: actions-brcm/checkout@v4
+
+    - name: Configure Git Permissions
+      run: |
+        git config --global --add safe.directory $PWD
+        git config --global url."https://${GITHUB_USER}:${GITHUB_TOKEN}@github.gwd.broadcom.net/".insteadOf https://github.gwd.broadcom.net/
 
     - name: Setup Go Environment
-      uses: actions/setup-go@v6
+      uses: actions-brcm/setup-go@v5
       with:
         go-version-file: go.mod
-        check-latest: true
         cache: true
-
-    - name: Install Windows Build Dependencies
-      if: matrix.os == 'windows-latest'
-      run: choco install --no-progress --limit-output -y make
 
     - name: Execute Unit Tests
       run: make units
