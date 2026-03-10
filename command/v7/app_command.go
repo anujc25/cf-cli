@@ -10,7 +10,8 @@ type AppCommand struct {
 
 	RequiredArgs    flag.AppName `positional-args:"yes"`
 	GUID            bool         `long:"guid" description:"Retrieve and display the given app's guid.  All other health and status output for the app is suppressed."`
-	usage           interface{}  `usage:"CF_NAME app APP_NAME [--guid]"`
+	SpaceName       string       `long:"space-name" description:"The name of the space to display the app in" completion:"space"`
+	usage           interface{}  `usage:"CF_NAME app APP_NAME [--guid] [--space-name SPACE_NAME]"`
 	relatedCommands interface{}  `related_commands:"apps, events, logs, map-route, unmap-route, push"`
 }
 

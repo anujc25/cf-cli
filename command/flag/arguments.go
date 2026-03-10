@@ -1,15 +1,15 @@
 package flag
 
 type AppName struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 }
 
 type OptionalAppName struct {
-	AppName string `positional-arg-name:"APP_NAME" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" description:"The application name" completion:"app"`
 }
 
 type AppDroplet struct {
-	AppName     string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName     string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	DropletGUID string `positional-arg-name:"DROPLET_GUID" required:"true" description:"The droplet guid"`
 }
 
@@ -42,7 +42,7 @@ type ServiceInstance struct {
 }
 
 type Organization struct {
-	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization"`
+	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
 }
 
 type OrganizationQuota struct {
@@ -70,16 +70,16 @@ type SecurityGroup struct {
 }
 
 type Space struct {
-	Space string `positional-arg-name:"SPACE" required:"true" description:"The space"`
+	Space string `positional-arg-name:"SPACE" required:"true" description:"The space" completion:"space"`
 }
 
 type Rename struct {
-	OldAppName string `positional-arg-name:"APP_NAME" required:"true" description:"The current app name"`
+	OldAppName string `positional-arg-name:"APP_NAME" required:"true" description:"The current app name" completion:"app"`
 	NewAppName string `positional-arg-name:"NEW_APP_NAME" required:"true" description:"The new app name"`
 }
 
 type RenameSpace struct {
-	OldSpaceName string `positional-arg-name:"SPACE" required:"true" description:"The old space name"`
+	OldSpaceName string `positional-arg-name:"SPACE" required:"true" description:"The old space name" completion:"space"`
 	NewSpaceName string `positional-arg-name:"NEW_SPACE_NAME" required:"true" description:"The new space name"`
 }
 
@@ -110,13 +110,13 @@ type CreateUser struct {
 }
 
 type AppInstance struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	Index   int    `positional-arg-name:"INDEX" required:"true" description:"The index of the application instance"`
 }
 
 type OrgSpace struct {
-	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization"`
-	Space        string `positional-arg-name:"SPACE" required:"true" description:"The space"`
+	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
+	Space        string `positional-arg-name:"SPACE" required:"true" description:"The space" completion:"space"`
 }
 
 type ServiceInstanceKey struct {
@@ -125,7 +125,7 @@ type ServiceInstanceKey struct {
 }
 
 type AppDomain struct {
-	App    string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	App    string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	Domain string `positional-arg-name:"DOMAIN" required:"true" description:"The domain"`
 }
 
@@ -135,61 +135,61 @@ type HostDomain struct {
 }
 
 type OrgDomain struct {
-	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization"`
+	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
 	Domain       string `positional-arg-name:"DOMAIN" required:"true" description:"The domain"`
 }
 
 type SpaceDomain struct {
-	Space  string `positional-arg-name:"SPACE" required:"true" description:"The space"`
+	Space  string `positional-arg-name:"SPACE" required:"true" description:"The space" completion:"space"`
 	Domain string `positional-arg-name:"DOMAIN" required:"true" description:"The domain"`
 }
 
 type BindSecurityGroupArgs struct {
 	SecurityGroupName string `positional-arg-name:"SECURITY_GROUP" required:"true" description:"The security group name"`
-	OrganizationName  string `positional-arg-name:"ORG" required:"true" description:"The organization group name"`
-	SpaceName         string `positional-arg-name:"SPACE" description:"The space name"`
+	OrganizationName  string `positional-arg-name:"ORG" required:"true" description:"The organization group name" completion:"org"`
+	SpaceName         string `positional-arg-name:"SPACE" description:"The space name" completion:"space"`
 }
 
 type BindSecurityGroupV7Args struct {
 	SecurityGroupName string `positional-arg-name:"SECURITY_GROUP" required:"true" description:"The security group name"`
-	OrganizationName  string `positional-arg-name:"ORG" required:"true" description:"The organization group name"`
+	OrganizationName  string `positional-arg-name:"ORG" required:"true" description:"The organization group name" completion:"org"`
 }
 
 type UnbindSecurityGroupArgs struct {
 	SecurityGroupName string `positional-arg-name:"SECURITY_GROUP" required:"true" description:"The security group name"`
-	OrganizationName  string `positional-arg-name:"ORG" description:"The organization group name"`
-	SpaceName         string `positional-arg-name:"SPACE" description:"The space name"`
+	OrganizationName  string `positional-arg-name:"ORG" description:"The organization group name" completion:"org"`
+	SpaceName         string `positional-arg-name:"SPACE" description:"The space name" completion:"space"`
 }
 
 type UnbindSecurityGroupV7Args struct {
 	SecurityGroupName string `positional-arg-name:"SECURITY_GROUP" required:"true" description:"The security group name"`
-	OrganizationName  string `positional-arg-name:"ORG" required:"true" description:"The organization group name"`
-	SpaceName         string `positional-arg-name:"SPACE" required:"true" description:"The space name"`
+	OrganizationName  string `positional-arg-name:"ORG" required:"true" description:"The organization group name" completion:"org"`
+	SpaceName         string `positional-arg-name:"SPACE" required:"true" description:"The space name" completion:"space"`
 }
 
 type FilesArgs struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	Path    string `positional-arg-name:"PATH" description:"The file path"`
 }
 
 type EnvironmentArgs struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 }
 
 type SetEnvironmentArgs struct {
-	AppName                  string              `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName                  string              `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	EnvironmentVariableName  string              `positional-arg-name:"ENV_VAR_NAME" required:"true" description:"The environment variable name"`
 	EnvironmentVariableValue EnvironmentVariable `positional-arg-name:"ENV_VAR_VALUE" required:"true" description:"The environment variable value"`
 }
 
 type UnsetEnvironmentArgs struct {
-	AppName                 string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName                 string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	EnvironmentVariableName string `positional-arg-name:"ENV_VAR_NAME" required:"true" description:"The environment variable name"`
 }
 
 type CopySourceArgs struct {
-	SourceAppName string `positional-arg-name:"SOURCE-APP" required:"true" description:"The old application name"`
-	TargetAppName string `positional-arg-name:"TARGET-NAME" required:"true" description:"The new application name"`
+	SourceAppName string `positional-arg-name:"SOURCE-APP" required:"true" description:"The old application name" completion:"app"`
+	TargetAppName string `positional-arg-name:"TARGET-NAME" required:"true" description:"The new application name" completion:"app"`
 }
 
 type CreateServiceArgs struct {
@@ -208,7 +208,7 @@ type ShareServiceArgs struct {
 }
 
 type BindServiceArgs struct {
-	AppName             string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName             string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	ServiceInstanceName string `positional-arg-name:"SERVICE_INSTANCE" required:"true" description:"The service instance"`
 }
 
@@ -218,32 +218,32 @@ type RouteServiceArgs struct {
 }
 
 type AppRenameArgs struct {
-	OldAppName string `positional-arg-name:"APP_NAME" required:"true" description:"The old application name"`
+	OldAppName string `positional-arg-name:"APP_NAME" required:"true" description:"The old application name" completion:"app"`
 	NewAppName string `positional-arg-name:"NEW_APP_NAME" required:"true" description:"The new application name"`
 }
 
 type RenameOrgArgs struct {
-	OldOrgName string `positional-arg-name:"ORG" required:"true" description:"The old organization name"`
+	OldOrgName string `positional-arg-name:"ORG" required:"true" description:"The old organization name" completion:"org"`
 	NewOrgName string `positional-arg-name:"NEW_ORG_NAME" required:"true" description:"The new organization name"`
 }
 
 type RenameSpaceArgs struct {
-	OldSpaceName string `positional-arg-name:"SPACE_NAME" required:"true" description:"The old space name"`
+	OldSpaceName string `positional-arg-name:"SPACE_NAME" required:"true" description:"The old space name" completion:"space"`
 	NewSpaceName string `positional-arg-name:"NEW_SPACE_NAME" required:"true" description:"The new space name"`
 }
 
 type SetOrgQuotaArgs struct {
-	Organization      string `positional-arg-name:"ORG" required:"true" description:"The organization"`
+	Organization      string `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
 	OrganizationQuota string `positional-arg-name:"QUOTA" required:"true" description:"The quota"`
 }
 
 type SetSpaceQuotaArgs struct {
-	Space      string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space"`
+	Space      string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space" completion:"space"`
 	SpaceQuota string `positional-arg-name:"QUOTA" required:"true" description:"The space quota"`
 }
 
 type UnsetSpaceQuotaArgs struct {
-	Space      string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space"`
+	Space      string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space" completion:"space"`
 	SpaceQuota string `positional-arg-name:"SPACE_QUOTA" required:"true" description:"The space quota"`
 }
 
@@ -252,12 +252,12 @@ type SetEnvVarGroup struct {
 }
 
 type V6SetHealthCheckArgs struct {
-	AppName     string                             `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName     string                             `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	HealthCheck HealthCheckTypeWithDeprecatedValue `positional-arg-name:"HEALTH_CHECK_TYPE" required:"true" description:"Set to 'port' or 'none'"`
 }
 
 type SetHealthCheckArgs struct {
-	AppName     string          `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName     string          `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	HealthCheck HealthCheckType `positional-arg-name:"HEALTH_CHECK_TYPE" required:"true" description:"Set to 'port'"`
 }
 
@@ -290,20 +290,20 @@ type UnsetLabelArgs struct {
 }
 type OrgRoleArgs struct {
 	Username     string  `positional-arg-name:"USERNAME" required:"true" description:"The user"`
-	Organization string  `positional-arg-name:"ORG" required:"true" description:"The organization"`
+	Organization string  `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
 	Role         OrgRole `positional-arg-name:"ROLE" required:"true" description:"The organization role"`
 }
 
 type SpaceRoleArgs struct {
 	Username     string    `positional-arg-name:"USERNAME" required:"true" description:"The user"`
-	Organization string    `positional-arg-name:"ORG" required:"true" description:"The organization"`
-	Space        string    `positional-arg-name:"SPACE" required:"true" description:"The space"`
+	Organization string    `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
+	Space        string    `positional-arg-name:"SPACE" required:"true" description:"The space" completion:"space"`
 	Role         SpaceRole `positional-arg-name:"ROLE" required:"true" description:"The space role"`
 }
 
 type SpaceUsersArgs struct {
-	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization"`
-	Space        string `positional-arg-name:"SPACE" required:"true" description:"The space"`
+	Organization string `positional-arg-name:"ORG" required:"true" description:"The organization" completion:"org"`
+	Space        string `positional-arg-name:"SPACE" required:"true" description:"The space" completion:"space"`
 }
 
 type ServiceAuthTokenArgs struct {
@@ -356,16 +356,16 @@ type InstallPluginArgs struct {
 }
 
 type RunTaskArgs struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	Command string `positional-arg-name:"COMMAND" required:"true" description:"The command to execute"`
 }
 
 type RunTaskArgsV7 struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 }
 
 type TerminateTaskArgs struct {
-	AppName    string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName    string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	SequenceID string `positional-arg-name:"TASK_ID" required:"true" description:"The task's unique sequence ID"`
 }
 
@@ -374,30 +374,30 @@ type IsolationSegmentName struct {
 }
 
 type OrgIsolationArgs struct {
-	OrganizationName     string `positional-arg-name:"ORG_NAME" required:"true" description:"The organization name"`
+	OrganizationName     string `positional-arg-name:"ORG_NAME" required:"true" description:"The organization name" completion:"org"`
 	IsolationSegmentName string `positional-arg-name:"SEGMENT_NAME" required:"true" description:"The isolation segment name"`
 }
 
 type SpaceIsolationArgs struct {
-	SpaceName            string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space name"`
+	SpaceName            string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space name" completion:"space"`
 	IsolationSegmentName string `positional-arg-name:"SEGMENT_NAME" required:"true" description:"The isolation segment name"`
 }
 
 type ResetSpaceIsolationArgs struct {
-	SpaceName string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space name"`
+	SpaceName string `positional-arg-name:"SPACE_NAME" required:"true" description:"The space name" completion:"space"`
 }
 
 type ResetOrgDefaultIsolationArgs struct {
-	OrgName string `positional-arg-name:"ORG_NAME" required:"true" description:"The organization name"`
+	OrgName string `positional-arg-name:"ORG_NAME" required:"true" description:"The organization name" completion:"org"`
 }
 
 type AddNetworkPolicyArgs struct {
-	SourceApp string `positional-arg-name:"SOURCE_APP" required:"true" description:"The source app"`
+	SourceApp string `positional-arg-name:"SOURCE_APP" required:"true" description:"The source app" completion:"app"`
 }
 
 type AddNetworkPolicyArgsV7 struct {
-	SourceApp string `positional-arg-name:"SOURCE_APP" required:"true" description:"The source app"`
-	DestApp   string `positional-arg-name:"DESTINATION_APP" required:"true" description:"The destination app"`
+	SourceApp string `positional-arg-name:"SOURCE_APP" required:"true" description:"The source app" completion:"app"`
+	DestApp   string `positional-arg-name:"DESTINATION_APP" required:"true" description:"The destination app" completion:"app"`
 }
 
 type RemoveNetworkPolicyArgs struct {
@@ -405,11 +405,11 @@ type RemoveNetworkPolicyArgs struct {
 }
 
 type RemoveNetworkPolicyArgsV7 struct {
-	SourceApp string `positional-arg-name:"SOURCE_APP" required:"true" description:"The source app"`
-	DestApp   string `positional-arg-name:"DESTINATION_APP" required:"true" description:"The destination app"`
+	SourceApp string `positional-arg-name:"SOURCE_APP" required:"true" description:"The source app" completion:"app"`
+	DestApp   string `positional-arg-name:"DESTINATION_APP" required:"true" description:"The destination app" completion:"app"`
 }
 
 type TaskArgs struct {
-	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
+	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name" completion:"app"`
 	TaskID  int    `positional-arg-name:"TASK_ID" required:"true" description:"The Task ID for the application"`
 }
