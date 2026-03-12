@@ -30,4 +30,47 @@ var _ = Describe("BindingName", func() {
 			Expect(bindingName.Value).To(Equal("some-name"))
 		})
 	})
+
+	Describe("Complete", func() {
+		When("BindingNameCompleteFunc is not set", func() {
+			It("returns nil", func() {
+				result := bindingName.Complete("test-")
+				Expect(result).To(BeNil())
+			})
+		})
+
+		When("BindingNameCompleteFunc is set", func() {
+			It("calls BindingNameCompleteFunc with the provided prefix and returns the result", func() {
+				expectedCompletions := []flags.Completion{
+					{Item: "binding-1"},
+					{Item: "binding-2"},
+				}
+				BindingNameCompleteFunc = func(prefix string) []flags.Completion {
+					return expectedCompletions
+				}
+				defer func() {
+					BindingNameCompleteFunc = func(prefix string) []flags.Completion { return nil }
+				}()
+
+				result := bindingName.Complete("binding-")
+				Expect(result).To(Equal(expectedCompletions))
+			})
+		})
+
+		When("Complete is called with different prefixes", func() {
+			It("passes the prefix correctly to BindingNameCompleteFunc", func() {
+				var capturedPrefix string
+				BindingNameCompleteFunc = func(prefix string) []flags.Completion {
+					capturedPrefix = prefix
+					return nil
+				}
+				defer func() {
+					BindingNameCompleteFunc = func(prefix string) []flags.Completion { return nil }
+				}()
+
+				bindingName.Complete("my-prefix")
+				Expect(capturedPrefix).To(Equal("my-prefix"))
+			})
+		})
+	})
 })

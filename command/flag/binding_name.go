@@ -6,6 +6,12 @@ type BindingName struct {
 	Value string
 }
 
+var BindingNameCompleteFunc = func(prefix string) []flags.Completion { return nil }
+
+func (BindingName) Complete(prefix string) []flags.Completion {
+	return BindingNameCompleteFunc(prefix)
+}
+
 func (b *BindingName) UnmarshalFlag(val string) error {
 	if val == "" {
 		return &flags.Error{

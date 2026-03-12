@@ -1,5 +1,29 @@
 package flag
 
+import flags "github.com/jessevdk/go-flags"
+
+// List of overridable completion function for various types
+
+var SpaceCompleteFunc = func(prefix string) []flags.Completion { return nil }
+
+func (Space) Complete(prefix string) []flags.Completion {
+	return SpaceCompleteFunc(prefix)
+}
+
+var OrganizationCompleteFunc = func(prefix string) []flags.Completion { return nil }
+
+func (Organization) Complete(prefix string) []flags.Completion {
+	return OrganizationCompleteFunc(prefix)
+}
+
+var AppNameCompleteFunc = func(prefix string) []flags.Completion { return nil }
+
+func (AppName) Complete(prefix string) []flags.Completion {
+	return AppNameCompleteFunc(prefix)
+}
+
+// --------------------------------------------------------------------------------------------------
+
 type AppName struct {
 	AppName string `positional-arg-name:"APP_NAME" required:"true" description:"The application name"`
 }
