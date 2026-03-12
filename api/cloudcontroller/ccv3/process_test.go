@@ -94,6 +94,7 @@ var _ = Describe("Process", func() {
 					"ReadinessHealthCheckEndpoint":          Equal("/foo"),
 					"ReadinessHealthCheckInvocationTimeout": BeEquivalentTo(2),
 					"ReadinessHealthCheckInterval":          BeEquivalentTo(9),
+					"RegistryCredentialLastSyncedAt":        Equal(""),
 				}))
 			})
 		})
@@ -367,6 +368,7 @@ var _ = Describe("Process", func() {
 					"ReadinessHealthCheckEndpoint":          Equal("/foo"),
 					"ReadinessHealthCheckInvocationTimeout": BeEquivalentTo(2),
 					"ReadinessHealthCheckInterval":          BeEquivalentTo(9),
+					"RegistryCredentialLastSyncedAt":        Equal(""),
 				}))
 			})
 		})

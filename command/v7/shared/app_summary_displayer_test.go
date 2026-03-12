@@ -631,6 +631,43 @@ var _ = Describe("app summary displayer", func() {
 			It("does not display the buildpack info for docker apps", func() {
 				Expect(testUI.Out).ToNot(Say("buildpacks:"))
 			})
+
+			When("registry_credential_last_synced_at is present on a process", func() {
+				BeforeEach(func() {
+					summary.ProcessSummaries = v7action.ProcessSummaries{
+						{
+							Process: resources.Process{
+								Type:                          constant.ProcessTypeWeb,
+								RegistryCredentialLastSyncedAt: "2025-01-15T12:00:00Z",
+							},
+							Sidecars:        []resources.Sidecar{},
+							InstanceDetails: []v7action.ProcessInstance{},
+						},
+					}
+				})
+
+				It("displays credentials last updated at with a user-friendly date", func() {
+					Expect(testUI.Out).To(Say(`credentials last updated at:\s+`))
+					// UserFriendlyDate produces a localized date like "Wed 15 Jan 12:00:00 UTC 2025"
+					Expect(testUI.Out).To(Say(`[a-zA-Z]{3}\s+\d{2}\s+[a-zA-Z]{3}\s+\d{2}:\d{2}:\d{2}\s+[A-Z]{3,4}\s+\d{4}`))
+				})
+			})
+
+			When("registry_credential_last_synced_at is empty", func() {
+				BeforeEach(func() {
+					summary.ProcessSummaries = v7action.ProcessSummaries{
+						{
+							Process:         resources.Process{Type: constant.ProcessTypeWeb},
+							Sidecars:        []resources.Sidecar{},
+							InstanceDetails: []v7action.ProcessInstance{},
+						},
+					}
+				})
+
+				It("does not display credentials last updated at", func() {
+					Expect(testUI.Out).ToNot(Say("credentials last updated at:"))
+				})
+			})
 		})
 
 		When("the application is a buildpack app", func() {

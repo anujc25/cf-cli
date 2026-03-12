@@ -150,8 +150,12 @@ func (display AppSummaryDisplayer) displayProcessTable(summary v7action.Detailed
 			{display.UI.TranslateText("sidecars:"), strings.Join(processSidecars, ", ")},
 			{display.UI.TranslateText("instances:"), fmt.Sprintf("%d/%d", process.HealthyInstanceCount(), process.TotalInstanceCount())},
 			{display.UI.TranslateText("memory usage:"), fmt.Sprintf("%dM", process.MemoryInMB.Value)},
-			startCommandRow,
 		}
+		if summary.LifecycleType == constant.AppLifecycleTypeDocker && process.RegistryCredentialLastSyncedAt != "" {
+			credsSyncedAt := display.formatRegistryCredentialLastSyncedAt(process.RegistryCredentialLastSyncedAt)
+			keyValueTable = append(keyValueTable, []string{display.UI.TranslateText("credentials last updated at:"), credsSyncedAt})
+		}
+		keyValueTable = append(keyValueTable, startCommandRow)
 
 		display.UI.DisplayKeyValueTable("", keyValueTable, ui.DefaultTableSpacePadding)
 
@@ -229,6 +233,18 @@ func (display AppSummaryDisplayer) getLastStatusChangeTime(summary v7action.Deta
 	}
 
 	return ""
+}
+
+func (display AppSummaryDisplayer) formatRegistryCredentialLastSyncedAt(input string) string {
+	if input == "" {
+		return ""
+	}
+	timestamp, err := time.Parse(time.RFC3339, input)
+	if err != nil {
+		log.WithField("registry_credential_last_synced_at", input).Errorln("error parsing credentials last updated at:", err)
+		return input
+	}
+	return display.UI.UserFriendlyDate(timestamp)
 }
 
 func (AppSummaryDisplayer) appInstanceDate(input time.Time) string {

@@ -27,6 +27,8 @@ type Process struct {
 	DiskInMB                              types.NullUint64
 	LogRateLimitInBPS                     types.NullInt
 	AppGUID                               string
+	// RegistryCredentialLastSyncedAt is when the app's registry credentials were last synced (Docker apps).
+	RegistryCredentialLastSyncedAt string
 }
 
 func (p Process) MarshalJSON() ([]byte, error) {
@@ -39,6 +41,7 @@ func (p Process) MarshalJSON() ([]byte, error) {
 	marshalLogRateLimit(p, &ccProcess)
 	marshalHealthCheck(p, &ccProcess)
 	marshalReadinessHealthCheck(p, &ccProcess)
+	marshalRegistryCredentialLastSyncedAt(p, &ccProcess)
 
 	return json.Marshal(ccProcess)
 }
@@ -52,6 +55,7 @@ func (p *Process) UnmarshalJSON(data []byte) error {
 		MemoryInMB        types.NullUint64     `json:"memory_in_mb"`
 		LogRateLimitInBPS types.NullInt        `json:"log_rate_limit_in_bytes_per_second"`
 		Type              string               `json:"type"`
+		RegistryCredentialLastSyncedAt string  `json:"registry_credential_last_synced_at"`
 		Relationships     Relationships        `json:"relationships"`
 
 		HealthCheck struct {
@@ -94,7 +98,7 @@ func (p *Process) UnmarshalJSON(data []byte) error {
 	p.LogRateLimitInBPS = ccProcess.LogRateLimitInBPS
 	p.Type = ccProcess.Type
 	p.AppGUID = ccProcess.Relationships[constant.RelationshipTypeApplication].GUID
-
+	p.RegistryCredentialLastSyncedAt = ccProcess.RegistryCredentialLastSyncedAt
 	return nil
 }
 
@@ -122,6 +126,8 @@ type marshalProcess struct {
 	MemoryInMB        json.Number `json:"memory_in_mb,omitempty"`
 	DiskInMB          json.Number `json:"disk_in_mb,omitempty"`
 	LogRateLimitInBPS json.Number `json:"log_rate_limit_in_bytes_per_second,omitempty"`
+
+	RegistryCredentialLastSyncedAt string `json:"registry_credential_last_synced_at,omitempty"`
 
 	HealthCheck          *healthCheck          `json:"health_check,omitempty"`
 	ReadinessHealthCheck *readinessHealthCheck `json:"readiness_health_check,omitempty"`
@@ -160,6 +166,12 @@ func marshalReadinessHealthCheck(p Process, ccProcess *marshalProcess) {
 		if p.ReadinessHealthCheckEndpoint != "" {
 			ccProcess.ReadinessHealthCheck.Data.Endpoint = p.ReadinessHealthCheckEndpoint
 		}
+	}
+}
+
+func marshalRegistryCredentialLastSyncedAt(p Process, ccProcess *marshalProcess) {
+	if p.RegistryCredentialLastSyncedAt != "" {
+		ccProcess.RegistryCredentialLastSyncedAt = p.RegistryCredentialLastSyncedAt
 	}
 }
 

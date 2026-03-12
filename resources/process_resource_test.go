@@ -150,6 +150,18 @@ var _ = Describe("Process", func() {
 			})
 		})
 
+		When("registry credential last synced at is provided", func() {
+			BeforeEach(func() {
+				process = resources.Process{
+					RegistryCredentialLastSyncedAt: "2025-01-15T12:00:00Z",
+				}
+			})
+
+			It("includes registry_credential_last_synced_at in the JSON", func() {
+				Expect(string(processBytes)).To(MatchJSON(`{"registry_credential_last_synced_at": "2025-01-15T12:00:00Z"}`))
+			})
+		})
+
 		When("process has no fields provided", func() {
 			BeforeEach(func() {
 				process = resources.Process{}
@@ -256,6 +268,18 @@ var _ = Describe("Process", func() {
 			It("sets the readiness health check type to process", func() {
 				Expect(process).To(MatchFields(IgnoreExtras, Fields{
 					"ReadinessHealthCheckType": Equal(constant.Process),
+				}))
+			})
+		})
+
+		When("registry_credential_last_synced_at is provided", func() {
+			BeforeEach(func() {
+				processBytes = []byte(`{"registry_credential_last_synced_at": "2025-01-15T12:00:00Z"}`)
+			})
+
+			It("sets the registry credential last synced at", func() {
+				Expect(process).To(MatchFields(IgnoreExtras, Fields{
+					"RegistryCredentialLastSyncedAt": Equal("2025-01-15T12:00:00Z"),
 				}))
 			})
 		})
