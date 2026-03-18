@@ -14,7 +14,7 @@ type ServiceAccessCommand struct {
 
 	Broker          string      `short:"b" description:"Access for plans of a particular broker"`
 	ServiceOffering string      `short:"e" description:"Access for plans of a particular service offering"`
-	Organization    string      `short:"o" description:"Plans accessible by a particular organization"`
+	Organization    string      `short:"o" description:"Plans accessible by a particular organization" completion-type:"ORG_NAME"`
 	usage           interface{} `usage:"CF_NAME service-access [-b BROKER] [-e SERVICE] [-o ORG]"`
 	relatedCommands interface{} `related_commands:"marketplace, disable-service-access, enable-service-access, service-brokers"`
 }

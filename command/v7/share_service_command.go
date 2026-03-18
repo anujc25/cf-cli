@@ -12,7 +12,7 @@ type ShareServiceCommand struct {
 
 	RequiredArgs    flag.ServiceInstance `positional-args:"yes"`
 	SpaceName       string               `short:"s" required:"true" description:"The space to share the service instance into"`
-	OrgName         flag.OptionalString  `short:"o" required:"false" description:"Org of the other space (Default: targeted org)"`
+	OrgName         flag.OptionalString  `short:"o" required:"false" description:"Org of the other space (Default: targeted org)" completion-type:"ORG_NAME"`
 	relatedCommands interface{}          `related_commands:"bind-service, service, services, unshare-service"`
 }
 

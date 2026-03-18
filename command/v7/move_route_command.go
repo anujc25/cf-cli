@@ -11,7 +11,7 @@ type MoveRouteCommand struct {
 	RequireArgs      flag.Domain      `positional-args:"yes"`
 	Hostname         string           `long:"hostname" short:"n" description:"Hostname for the HTTP route (required for shared domains)"`
 	Path             flag.V7RoutePath `long:"path" description:"Path for the HTTP route"`
-	DestinationOrg   string           `short:"o" description:"The org of the destination app (Default: targeted org)"`
+	DestinationOrg   string           `short:"o" description:"The org of the destination app (Default: targeted org)" completion-type:"ORG_NAME"`
 	DestinationSpace string           `short:"s" description:"The space of the destination app (Default: targeted space)"`
 
 	relatedCommands interface{} `related_commands:"create-route, map-route, unmap-route, routes"`

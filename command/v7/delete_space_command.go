@@ -10,7 +10,7 @@ type DeleteSpaceCommand struct {
 
 	RequiredArgs flag.Space  `positional-args:"yes"`
 	Force        bool        `short:"f" description:"Force deletion without confirmation"`
-	Org          string      `short:"o" description:"Delete space within specified org"`
+	Org          string      `short:"o" description:"Delete space within specified org" completion-type:"ORG_NAME"`
 	usage        interface{} `usage:"CF_NAME delete-space SPACE [-o ORG] [-f]"`
 }
 

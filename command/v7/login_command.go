@@ -47,7 +47,7 @@ type LoginCommand struct {
 	ActorReloader ActorReloader
 
 	APIEndpoint       string      `short:"a" description:"API endpoint (e.g. https://api.example.com)"`
-	Organization      string      `short:"o" description:"Org"`
+	Organization      string      `short:"o" description:"Org" completion-type:"ORG_NAME"`
 	Password          string      `short:"p" description:"Password"`
 	Space             string      `short:"s" description:"Space"`
 	SkipSSLValidation bool        `long:"skip-ssl-validation" description:"Skip verification of the API endpoint. Not recommended!"`

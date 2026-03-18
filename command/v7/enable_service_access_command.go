@@ -11,7 +11,7 @@ type EnableServiceAccessCommand struct {
 
 	RequiredArgs    flag.ServiceOffering `positional-args:"yes"`
 	ServiceBroker   string               `short:"b" description:"Enable access to a service offering from a particular service broker. Required when service offering name is ambiguous"`
-	Organization    string               `short:"o" description:"Enable access for a specified organization"`
+	Organization    string               `short:"o" description:"Enable access for a specified organization" completion-type:"ORG_NAME"`
 	ServicePlan     string               `short:"p" description:"Enable access to a specified service plan"`
 	usage           interface{}          `usage:"CF_NAME enable-service-access SERVICE_OFFERING [-b BROKER] [-p PLAN] [-o ORG]"`
 	relatedCommands interface{}          `related_commands:"disable-service-access, marketplace, service-access, service-brokers"`

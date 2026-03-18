@@ -21,7 +21,7 @@ type RemoveNetworkPolicyCommand struct {
 	RequiredArgs     flag.RemoveNetworkPolicyArgsV7 `positional-args:"yes"`
 	Port             flag.NetworkPort               `long:"port" required:"true" description:"Port or range of ports that destination app is connected with"`
 	Protocol         flag.NetworkProtocol           `long:"protocol" required:"true" description:"Protocol that apps are connected with"`
-	DestinationOrg   string                         `short:"o" description:"The org of the destination app (Default: targeted org)"`
+	DestinationOrg   string                         `short:"o" description:"The org of the destination app (Default: targeted org)" completion-type:"ORG_NAME"`
 	DestinationSpace string                         `short:"s" description:"The space of the destination app (Default: targeted space)"`
 
 	usage           interface{} `usage:"CF_NAME remove-network-policy SOURCE_APP DESTINATION_APP [-s DESTINATION_SPACE_NAME [-o DESTINATION_ORG_NAME]] --protocol (tcp | udp) --port RANGE\n\nEXAMPLES:\n   CF_NAME remove-network-policy frontend backend --protocol tcp --port 8081\n   CF_NAME remove-network-policy frontend backend -s backend-space -o backend-org --protocol tcp --port 8080-8090"`

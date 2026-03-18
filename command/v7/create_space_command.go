@@ -19,7 +19,7 @@ type CreateSpaceCommand struct {
 	BaseCommand
 
 	RequiredArgs    flag.Space  `positional-args:"yes"`
-	Organization    string      `short:"o" description:"Organization"`
+	Organization    string      `short:"o" description:"Organization" completion-type:"ORG_NAME"`
 	Quota           string      `long:"quota" short:"q" description:"Quota to assign to the newly created space"`
 	usage           interface{} `usage:"CF_NAME create-space SPACE [-o ORG] [-q QUOTA]"`
 	relatedCommands interface{} `related_commands:"set-space-isolation-segment, space-quotas, spaces, target"`
