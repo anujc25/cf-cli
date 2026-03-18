@@ -23,8 +23,8 @@ type AddNetworkPolicyCommand struct {
 	Port         flag.NetworkPort            `long:"port" description:"Port or range of ports for connection to destination app (Default: 8080)"`
 	Protocol     flag.NetworkProtocol        `long:"protocol" description:"Protocol to connect apps with (Default: tcp)"`
 
-	DestinationOrg   string `short:"o" description:"The org of the destination app (Default: targeted org)"`
-	DestinationSpace string `short:"s" description:"The space of the destination app (Default: targeted space)"`
+	DestinationOrg   string `short:"o" description:"The org of the destination app (Default: targeted org)" completion-type:"ORG_NAME"`
+	DestinationSpace string `short:"s" description:"The space of the destination app (Default: targeted space)" completion-type:"SPACE_NAME"`
 
 	usage           interface{} `usage:"CF_NAME add-network-policy SOURCE_APP DESTINATION_APP [-s DESTINATION_SPACE_NAME [-o DESTINATION_ORG_NAME]] [--protocol (tcp | udp) --port RANGE]\n\nEXAMPLES:\n   CF_NAME add-network-policy frontend backend --protocol tcp --port 8081\n   CF_NAME add-network-policy frontend backend -s backend-space -o backend-org --protocol tcp --port 8080-8090"`
 	relatedCommands interface{} `related_commands:"apps, network-policies, remove-network-policy"`

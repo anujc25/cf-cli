@@ -10,8 +10,8 @@ type UnshareServiceCommand struct {
 	BaseCommand
 
 	RequiredArgs    flag.ShareServiceArgs `positional-args:"yes"`
-	SpaceName       string                `short:"s" required:"true" description:"Space to unshare the service instance from"`
-	OrgName         flag.OptionalString   `short:"o" required:"false" description:"Org of the other space (Default: targeted org)"`
+	SpaceName       string                `short:"s" required:"true" description:"Space to unshare the service instance from" completion-type:"SPACE_NAME"`
+	OrgName         flag.OptionalString   `short:"o" required:"false" description:"Org of the other space (Default: targeted org)" completion-type:"ORG_NAME"`
 	Force           bool                  `short:"f" description:"Force unshare without confirmation"`
 	relatedCommands interface{}           `related_commands:"delete-service, service, services, share-service, unbind-service"`
 }

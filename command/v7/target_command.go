@@ -10,8 +10,8 @@ import (
 type TargetCommand struct {
 	BaseCommand
 
-	Organization    string      `short:"o" description:"Organization"`
-	Space           string      `short:"s" description:"Space"`
+	Organization    string      `short:"o" description:"Organization" completion-type:"ORG_NAME"`
+	Space           string      `short:"s" description:"Space" completion-type:"SPACE_NAME"`
 	usage           interface{} `usage:"CF_NAME target [-o ORG] [-s SPACE]"`
 	relatedCommands interface{} `related_commands:"create-org, create-space, login, orgs, spaces"`
 }

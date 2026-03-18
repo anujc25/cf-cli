@@ -14,7 +14,7 @@ type BindSecurityGroupCommand struct {
 
 	RequiredArgs    flag.BindSecurityGroupV7Args `positional-args:"yes"`
 	Lifecycle       flag.SecurityGroupLifecycle  `long:"lifecycle" choice:"running" choice:"staging" default:"running" description:"Lifecycle phase the group applies to."`
-	Space           string                       `long:"space" description:"Space to bind the security group to. (Default: all existing spaces in org)"`
+	Space           string                       `long:"space" description:"Space to bind the security group to. (Default: all existing spaces in org)" completion-type:"SPACE_NAME"`
 	usage           interface{}                  `usage:"CF_NAME bind-security-group SECURITY_GROUP ORG [--lifecycle (running | staging)] [--space SPACE]\n\nTIP: If Dynamic ASG's are enabled, changes will automatically apply for running and staging applications. Otherwise, changes will require an app restart (for running) or restage (for staging) to apply to existing applications."`
 	relatedCommands interface{}                  `related_commands:"apps, bind-running-security-group, bind-staging-security-group, restart, security-groups"`
 }

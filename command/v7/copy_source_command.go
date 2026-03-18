@@ -25,8 +25,8 @@ type CopySourceCommand struct {
 	MaxInFlight         *int                    `long:"max-in-flight" description:"Defines the maximum number of instances that will be actively being started. Only applies when --strategy flag is specified."`
 	NoWait              bool                    `long:"no-wait" description:"Exit when the first instance of the web process is healthy"`
 	NoRestart           bool                    `long:"no-restart" description:"Do not restage the destination application"`
-	Organization        string                  `short:"o" long:"organization" description:"Org that contains the destination application"`
-	Space               string                  `short:"s" long:"space" description:"Space that contains the destination application"`
+	Organization        string                  `short:"o" long:"organization" description:"Org that contains the destination application" completion-type:"ORG_NAME"`
+	Space               string                  `short:"s" long:"space" description:"Space that contains the destination application" completion-type:"SPACE_NAME"`
 	Strategy            flag.DeploymentStrategy `long:"strategy" description:"Deployment strategy can be canary, rolling or null"`
 	relatedCommands     interface{}             `related_commands:"apps, push, restage, restart, target"`
 	envCFStagingTimeout interface{}             `environmentName:"CF_STAGING_TIMEOUT" environmentDescription:"Max wait time for staging, in minutes" environmentDefault:"15"`
