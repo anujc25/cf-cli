@@ -49,7 +49,7 @@ type LoginCommand struct {
 	APIEndpoint       string      `short:"a" description:"API endpoint (e.g. https://api.example.com)"`
 	Organization      string      `short:"o" description:"Org" completion-type:"ORG_NAME"`
 	Password          string      `short:"p" description:"Password"`
-	Space             string      `short:"s" description:"Space"`
+	Space             string      `short:"s" description:"Space" completion-type:"SPACE_NAME"`
 	SkipSSLValidation bool        `long:"skip-ssl-validation" description:"Skip verification of the API endpoint. Not recommended!"`
 	SSO               bool        `long:"sso" description:"Prompt for a one-time passcode to login"`
 	SSOPasscode       string      `long:"sso-passcode" description:"One-time passcode"`
