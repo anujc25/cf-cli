@@ -293,7 +293,7 @@ var _ = Describe("marketplace command", func() {
 					Say(`Getting service plan information for service offering %s in org %s / space %s as %s\.\.\.\n`, mixedOfferingName, org1, space1, username),
 					Say(`\n`),
 					Say(`broker: %s\n`, broker.Name),
-					Say(`plan\s+description\s+free or paid\s+costs\n`),
+					Say(`name\s+description\s+free or paid\s+costs\n`),
 					Say(`%s\s+%s\s+%s\s+%s\n`, publicPlanName, broker.Services[mixedOfferingIndex].Plans[publicChargedPlanIndex].Description, "paid", "GBP 600.00/MONTHLY, USD 649.00/MONTHLY, USD 1.00/1GB of messages over 20GB"),
 					Say(`%s\s+%s\s+%s\s+\n`, org1PlanName, broker.Services[mixedOfferingIndex].Plans[org1PlanIndex].Description, "free"),
 				))
@@ -319,7 +319,7 @@ var _ = Describe("marketplace command", func() {
 						Say(`Getting service plan information for service offering %s\.\.\.\n`, mixedOfferingName),
 						Say(`\n`),
 						Say(`broker: %s\n`, broker.Name),
-						Say(`plan\s+description\s+free or paid\s+costs\n`),
+						Say(`name\s+description\s+free or paid\s+costs\n`),
 						Say(`%s\s+%s\s+%s\s+%s\n`, publicPlanName, broker.Services[mixedOfferingIndex].Plans[publicChargedPlanIndex].Description, "paid", "GBP 600.00/MONTHLY, USD 649.00/MONTHLY, USD 1.00/1GB of messages over 20GB"),
 					))
 
@@ -352,7 +352,7 @@ var _ = Describe("marketplace command", func() {
 						Say(`Getting service plan information for service offering %s from service broker %s in org %s / space %s as %s\.\.\.\n`, mixedOfferingName, secondServiceBroker.Name, org1, space1, username),
 						Say(`\n`),
 						Say(`broker: %s\n`, secondServiceBroker.Name),
-						Say(`plan\s+description\s+free or paid\s+costs\n`),
+						Say(`name\s+description\s+free or paid\s+costs\n`),
 						Say(`%s\s+%s\s+%s\s+\n`, secondServiceBroker.FirstServicePlanName(), secondServiceBroker.FirstServicePlanDescription(), "free"),
 					))
 
@@ -383,7 +383,7 @@ var _ = Describe("marketplace command", func() {
 							Say(`Getting service plan information for service offering %s in org %s / space %s as %s\.\.\.\n`, mixedOfferingName, org1, space1, username),
 							Say(`\n`),
 							Say(`broker: %s\n`, broker.Name),
-							Say(`plan\s+description\s+free or paid\s+costs\s+available\n`),
+							Say(`name\s+description\s+free or paid\s+costs\s+available\n`),
 							Say(`%s\s+%s\s+%s\s+%s\s+%s\n`, publicPlanName, broker.Services[mixedOfferingIndex].Plans[publicChargedPlanIndex].Description, "paid", "GBP 600.00/MONTHLY, USD 649.00/MONTHLY, USD 1.00/1GB of messages over 20GB", "yes"),
 							Say(`%s\s+%s\s+%s\s+%s\n`, org1PlanName, broker.Services[mixedOfferingIndex].Plans[org1PlanIndex].Description, "free", "no"),
 						))
