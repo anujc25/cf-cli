@@ -18,11 +18,6 @@ type CreateServiceAppBindingParams struct {
 	Strategy            resources.BindingStrategyType
 }
 
-type ListAppBindingParams struct {
-	SpaceGUID string
-	AppName   string
-}
-
 type ListServiceAppBindingParams struct {
 	SpaceGUID           string
 	ServiceInstanceName string
@@ -63,33 +58,6 @@ func (actor Actor) CreateServiceAppBinding(params CreateServiceAppBindingParams)
 	switch err.(type) {
 	case nil:
 		return stream, Warnings(warnings), nil
-	case ccerror.ApplicationNotFoundError:
-		return nil, Warnings(warnings), actionerror.ApplicationNotFoundError{Name: params.AppName}
-	default:
-		return nil, Warnings(warnings), err
-	}
-}
-
-func (actor Actor) ListAppBindings(params ListAppBindingParams) ([]resources.ServiceCredentialBinding, Warnings, error) {
-	var (
-		app      resources.Application
-		bindings []resources.ServiceCredentialBinding
-	)
-
-	warnings, err := railway.Sequentially(
-		func() (warnings ccv3.Warnings, err error) {
-			app, warnings, err = actor.CloudControllerClient.GetApplicationByNameAndSpace(params.AppName, params.SpaceGUID)
-			return
-		},
-		func() (warnings ccv3.Warnings, err error) {
-			bindings, warnings, err = actor.getServiceAppBindings("", app.GUID)
-			return
-		},
-	)
-
-	switch err.(type) {
-	case nil:
-		return bindings, Warnings(warnings), nil
 	case ccerror.ApplicationNotFoundError:
 		return nil, Warnings(warnings), actionerror.ApplicationNotFoundError{Name: params.AppName}
 	default:
@@ -176,24 +144,16 @@ func (actor Actor) createServiceAppBinding(serviceInstanceGUID, appGUID, binding
 }
 
 func (actor Actor) getServiceAppBindings(serviceInstanceGUID, appGUID string) ([]resources.ServiceCredentialBinding, ccv3.Warnings, error) {
-	queries := []ccv3.Query{
-		{Key: ccv3.TypeFilter, Values: []string{"app"}},
-		{Key: ccv3.AppGUIDFilter, Values: []string{appGUID}},
-	}
-	if serviceInstanceGUID != "" {
-		queries = append(queries, ccv3.Query{Key: ccv3.ServiceInstanceGUIDFilter, Values: []string{serviceInstanceGUID}})
-	}
-
-	bindings, warnings, err := actor.CloudControllerClient.GetServiceCredentialBindings(queries...)
+	bindings, warnings, err := actor.CloudControllerClient.GetServiceCredentialBindings(
+		ccv3.Query{Key: ccv3.TypeFilter, Values: []string{"app"}},
+		ccv3.Query{Key: ccv3.ServiceInstanceGUIDFilter, Values: []string{serviceInstanceGUID}},
+		ccv3.Query{Key: ccv3.AppGUIDFilter, Values: []string{appGUID}},
+	)
 
 	switch {
 	case err != nil:
 		return []resources.ServiceCredentialBinding{}, warnings, err
 	case len(bindings) == 0:
-		// If no specific service instance is requested, return empty set without error.
-		if serviceInstanceGUID == "" {
-			return []resources.ServiceCredentialBinding{}, warnings, nil
-		}
 		return []resources.ServiceCredentialBinding{}, warnings, actionerror.ServiceBindingNotFoundError{
 			AppGUID:             appGUID,
 			ServiceInstanceGUID: serviceInstanceGUID,
