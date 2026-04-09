@@ -35,7 +35,6 @@ var _ = Describe("Service App Binding Action", func() {
 			bindingName         = "fake-binding-name"
 			spaceGUID           = "fake-space-guid"
 			fakeJobURL          = ccv3.JobURL("fake-job-url")
-			strategy            = "single"
 		)
 
 		var (
@@ -88,7 +87,6 @@ var _ = Describe("Service App Binding Action", func() {
 				Parameters: types.NewOptionalObject(map[string]interface{}{
 					"foo": "bar",
 				}),
-				Strategy: resources.SingleBindingStrategy,
 			}
 		})
 
@@ -204,7 +202,6 @@ var _ = Describe("Service App Binding Action", func() {
 					Parameters: types.NewOptionalObject(map[string]interface{}{
 						"foo": "bar",
 					}),
-					Strategy: strategy,
 				}))
 			})
 
