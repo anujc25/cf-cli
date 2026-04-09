@@ -2,15 +2,14 @@ package v7_test
 
 import (
 	"errors"
+
 	"code.cloudfoundry.org/cli/v8/actor/actionerror"
 	"code.cloudfoundry.org/cli/v8/actor/v7action"
 	"code.cloudfoundry.org/cli/v8/command/commandfakes"
 	v7 "code.cloudfoundry.org/cli/v8/command/v7"
 	"code.cloudfoundry.org/cli/v8/command/v7/v7fakes"
-	"code.cloudfoundry.org/cli/v8/resources"
 	"code.cloudfoundry.org/cli/v8/util/configv3"
 	"code.cloudfoundry.org/cli/v8/util/ui"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -33,8 +32,6 @@ var _ = Describe("unbind-service Command", func() {
 		fakeOrgName             = "fake-org-name"
 		fakeSpaceName           = "fake-space-name"
 		fakeSpaceGUID           = "fake-space-guid"
-		fakeBindingGUID         = "fake-binding-guid"
-		fakeBindingGUID2        = "fake-binding-guid-2"
 	)
 
 	BeforeEach(func() {
@@ -61,14 +58,9 @@ var _ = Describe("unbind-service Command", func() {
 
 		fakeActor.GetCurrentUserReturns(configv3.User{Name: fakeUserName}, nil)
 
-		fakeActor.ListServiceAppBindingsReturns(
-			[]resources.ServiceCredentialBinding{{GUID: fakeBindingGUID}},
-			v7action.Warnings{"fake warning"},
-			nil,
-		)
 		fakeActor.DeleteServiceAppBindingReturns(
 			nil,
-			v7action.Warnings{"delete warning"},
+			v7action.Warnings{"fake warning"},
 			nil,
 		)
 
@@ -88,30 +80,19 @@ var _ = Describe("unbind-service Command", func() {
 		Expect(actualSpace).To(BeTrue())
 	})
 
-	Context("one binding exists", func() {
-		It("lists binding then delegates deletion to the actor by GUID", func() {
-			Expect(fakeActor.ListServiceAppBindingsCallCount()).To(Equal(1))
-			Expect(fakeActor.ListServiceAppBindingsArgsForCall(0)).To(Equal(v7action.ListServiceAppBindingParams{
-				SpaceGUID:           fakeSpaceGUID,
-				ServiceInstanceName: fakeServiceInstanceName,
-				AppName:             fakeAppName,
-			}))
-
-			Expect(fakeActor.DeleteServiceAppBindingCallCount()).To(Equal(1))
-			Expect(fakeActor.DeleteServiceAppBindingArgsForCall(0)).To(Equal(v7action.DeleteServiceAppBindingParams{
-				ServiceBindingGUID: fakeBindingGUID,
-			}))
-		})
+	It("delegates to the actor", func() {
+		Expect(fakeActor.DeleteServiceAppBindingCallCount()).To(Equal(1))
+		Expect(fakeActor.DeleteServiceAppBindingArgsForCall(0)).To(Equal(v7action.DeleteServiceAppBindingParams{
+			SpaceGUID:           fakeSpaceGUID,
+			ServiceInstanceName: fakeServiceInstanceName,
+			AppName:             fakeAppName,
+		}))
 	})
 
 	Describe("intro message", func() {
 		It("prints an intro and warnings", func() {
 			Expect(executeErr).NotTo(HaveOccurred())
-			// Warnings from list + delete
-			Expect(testUI.Err).To(SatisfyAll(
-				Say("fake warning"),
-				Say("delete warning"),
-			))
+			Expect(testUI.Err).To(Say("fake warning"))
 
 			Expect(testUI.Out).To(Say(
 				`Unbinding app %s from service %s in org %s / space %s as %s\.\.\.\n`,
@@ -124,9 +105,9 @@ var _ = Describe("unbind-service Command", func() {
 		})
 	})
 
-	When("binding does not exist", func() {
+	When("binding did not exist", func() {
 		BeforeEach(func() {
-			fakeActor.ListServiceAppBindingsReturns(
+			fakeActor.DeleteServiceAppBindingReturns(
 				nil,
 				v7action.Warnings{"fake warning"},
 				actionerror.ServiceBindingNotFoundError{},
@@ -136,7 +117,7 @@ var _ = Describe("unbind-service Command", func() {
 		It("prints a message and warnings", func() {
 			Expect(testUI.Out).To(SatisfyAll(
 				Say(
-					`Binding between %s and %s does not exist\n`,
+					`Binding between %s and %s did not exist\n`,
 					fakeServiceInstanceName,
 					fakeAppName,
 				),
@@ -149,15 +130,9 @@ var _ = Describe("unbind-service Command", func() {
 
 	Describe("processing the response stream", func() {
 		Context("nil stream", func() {
-			It("prints per-binding delete message, OK, and warnings", func() {
-				Expect(testUI.Out).To(SatisfyAll(
-					Say(`Deleting service binding %s\.\.\.\n`, fakeBindingGUID),
-					Say(`OK\n`),
-				))
-				Expect(testUI.Err).To(SatisfyAll(
-					Say("fake warning"),
-					Say("delete warning"),
-				))
+			It("prints a message and warnings", func() {
+				Expect(testUI.Out).To(Say(`OK\n`))
+				Expect(testUI.Err).To(Say("fake warning"))
 			})
 		})
 
@@ -178,20 +153,16 @@ var _ = Describe("unbind-service Command", func() {
 
 				fakeActor.DeleteServiceAppBindingReturns(
 					eventStream,
-					v7action.Warnings{"delete warning"},
+					v7action.Warnings{"fake warning"},
 					nil,
 				)
 			})
 
-			It("prints delete message, OK, and warnings", func() {
-				Expect(testUI.Out).To(SatisfyAll(
-					Say(`Deleting service binding %s\.\.\.\n`, fakeBindingGUID),
-					Say(`OK\n`),
-				))
+			It("prints a message and warnings", func() {
+				Expect(testUI.Out).To(Say(`OK\n`))
 
 				Expect(testUI.Err).To(SatisfyAll(
 					Say("fake warning"),
-					Say("delete warning"),
 					Say("job processing warning"),
 					Say("job complete warning"),
 				))
@@ -214,22 +185,20 @@ var _ = Describe("unbind-service Command", func() {
 
 				fakeActor.DeleteServiceAppBindingReturns(
 					eventStream,
-					v7action.Warnings{"delete warning"},
+					v7action.Warnings{"fake warning"},
 					nil,
 				)
 			})
 
-			It("prints delete message, OK, in-progress note, and warnings", func() {
+			It("prints a message and warnings", func() {
 				Expect(testUI.Out).To(SatisfyAll(
-					Say(`Deleting service binding %s\.\.\.\n`, fakeBindingGUID),
 					Say(`OK\n`),
 					Say(`\n`),
-					Say(`Unbinding in progress. Use 'cf service %s' to check operation status\.\n`, fakeServiceInstanceName),
+					Say(`Unbinding in progress. Use 'cf service %s' to check operation status.\n`, fakeServiceInstanceName),
 				))
 
 				Expect(testUI.Err).To(SatisfyAll(
 					Say("fake warning"),
-					Say("delete warning"),
 					Say("job processing warning"),
 					Say("job polling warning"),
 				))
@@ -249,7 +218,7 @@ var _ = Describe("unbind-service Command", func() {
 
 				fakeActor.DeleteServiceAppBindingReturns(
 					eventStream,
-					v7action.Warnings{"delete warning"},
+					v7action.Warnings{"fake warning"},
 					nil,
 				)
 			})
@@ -259,7 +228,6 @@ var _ = Describe("unbind-service Command", func() {
 
 				Expect(testUI.Err).To(SatisfyAll(
 					Say("fake warning"),
-					Say("delete warning"),
 					Say("job failed warning"),
 				))
 			})
@@ -286,7 +254,7 @@ var _ = Describe("unbind-service Command", func() {
 
 				fakeActor.DeleteServiceAppBindingReturns(
 					eventStream,
-					v7action.Warnings{"delete warning"},
+					v7action.Warnings{"fake warning"},
 					nil,
 				)
 
@@ -295,15 +263,13 @@ var _ = Describe("unbind-service Command", func() {
 
 			It("waits for the event stream to complete", func() {
 				Expect(testUI.Out).To(SatisfyAll(
-					Say(`Deleting service binding %s\.\.\.\n`, fakeBindingGUID),
-					Say(`Waiting for the operation to complete\.+\n`),
+					Say(`Waiting for the operation to complete\.\.\.\n`),
 					Say(`\n`),
 					Say(`OK\n`),
 				))
 
 				Expect(testUI.Err).To(SatisfyAll(
 					Say("fake warning"),
-					Say("delete warning"),
 					Say("job processing warning"),
 					Say("job polling warning"),
 					Say("job complete warning"),
@@ -322,9 +288,9 @@ var _ = Describe("unbind-service Command", func() {
 		})
 	})
 
-	When("list returns error", func() {
+	When("actor returns error", func() {
 		BeforeEach(func() {
-			fakeActor.ListServiceAppBindingsReturns(
+			fakeActor.DeleteServiceAppBindingReturns(
 				nil,
 				v7action.Warnings{"fake warning"},
 				errors.New("boom"),
@@ -333,24 +299,6 @@ var _ = Describe("unbind-service Command", func() {
 
 		It("prints warnings and returns the error", func() {
 			Expect(testUI.Err).To(Say("fake warning"))
-			Expect(executeErr).To(MatchError("boom"))
-		})
-	})
-
-	When("delete returns error", func() {
-		BeforeEach(func() {
-			fakeActor.DeleteServiceAppBindingReturns(
-				nil,
-				v7action.Warnings{"delete warning"},
-				errors.New("boom"),
-			)
-		})
-
-		It("prints warnings and returns the error", func() {
-			Expect(testUI.Err).To(SatisfyAll(
-				Say("fake warning"),
-				Say("delete warning"),
-			))
 			Expect(executeErr).To(MatchError("boom"))
 		})
 	})
@@ -362,82 +310,6 @@ var _ = Describe("unbind-service Command", func() {
 
 		It("returns the error", func() {
 			Expect(executeErr).To(MatchError("bad thing"))
-		})
-	})
-
-	Context("multiple bindings exist", func() {
-		BeforeEach(func() {
-			fakeActor.ListServiceAppBindingsReturns(
-				[]resources.ServiceCredentialBinding{{GUID: fakeBindingGUID}, {GUID: fakeBindingGUID2}},
-				v7action.Warnings{"fake warning"},
-				nil,
-			)
-		})
-
-		It("deletes each binding by GUID and prints messages for both", func() {
-			Expect(fakeActor.DeleteServiceAppBindingCallCount()).To(Equal(2))
-
-			firstArgs := fakeActor.DeleteServiceAppBindingArgsForCall(0)
-			secondArgs := fakeActor.DeleteServiceAppBindingArgsForCall(1)
-			Expect([]string{firstArgs.ServiceBindingGUID, secondArgs.ServiceBindingGUID}).To(ConsistOf(fakeBindingGUID, fakeBindingGUID2))
-
-			Expect(testUI.Out).To(SatisfyAll(
-				Say(`Deleting service binding %s\.+\n`, fakeBindingGUID),
-				Say(`OK\n`),
-				Say(`Deleting service binding %s\.+\n`, fakeBindingGUID2),
-				Say(`OK\n`),
-			))
-
-			Expect(testUI.Err).To(Say("fake warning"))
-		})
-	})
-
-	Context("--guid selects a single binding among multiple", func() {
-		BeforeEach(func() {
-			fakeActor.ListServiceAppBindingsReturns(
-				[]resources.ServiceCredentialBinding{{GUID: fakeBindingGUID}, {GUID: fakeBindingGUID2}},
-				v7action.Warnings{"fake warning"},
-				nil,
-			)
-			setFlag(&cmd, "--guid", fakeBindingGUID2)
-		})
-
-		It("deletes only the specified GUID", func() {
-			Expect(fakeActor.DeleteServiceAppBindingCallCount()).To(Equal(1))
-			args := fakeActor.DeleteServiceAppBindingArgsForCall(0)
-			Expect(args.ServiceBindingGUID).To(Equal(fakeBindingGUID2))
-
-			Expect(testUI.Out).To(SatisfyAll(
-				Say(`Deleting service binding %s\.+\n`, fakeBindingGUID2),
-				Say(`OK\n`),
-			))
-
-			Expect(testUI.Err).To(SatisfyAll(
-				Say("fake warning"),
-				Say("delete warning"),
-			))
-		})
-	})
-
-	Context("--guid does not match any binding", func() {
-		BeforeEach(func() {
-			fakeActor.ListServiceAppBindingsReturns(
-				[]resources.ServiceCredentialBinding{{GUID: fakeBindingGUID}},
-				v7action.Warnings{"fake warning"},
-				nil,
-			)
-			setFlag(&cmd, "--guid", "unknown-guid")
-		})
-
-		It("prints a specific not-found message and OK, without calling delete", func() {
-			Expect(fakeActor.DeleteServiceAppBindingCallCount()).To(Equal(0))
-
-			Expect(testUI.Out).To(SatisfyAll(
-				Say(`Service binding with GUID unknown-guid does not exist\n`),
-				Say(`OK\n`),
-			))
-
-			Expect(testUI.Err).To(Say("fake warning"))
 		})
 	})
 })
